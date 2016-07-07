@@ -140,7 +140,7 @@ module DroidAdbs
     private
 
     def adb
-      fail "Please set ANDROID_HOME" unless ENV["ANDROID_HOME"]
+      raise "Please set ANDROID_HOME" unless ENV["ANDROID_HOME"]
       "#{ENV["ANDROID_HOME"]}/platform-tools/adb"
     end
 
