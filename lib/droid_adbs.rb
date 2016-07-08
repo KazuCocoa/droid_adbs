@@ -1,7 +1,6 @@
 require "droid_adbs/version"
 require_relative "droid_adbs/commons/settings"
 require_relative "droid_adbs/commons/devices"
-# require_relative "droid_adbs/commons/debug"
 require_relative "droid_adbs/commons/backup"
 require_relative "droid_adbs/aapt"
 
