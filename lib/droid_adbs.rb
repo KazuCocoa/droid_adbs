@@ -8,6 +8,11 @@ module DroidAdbs
   class << self
     attr_accessor :device_serial
 
+    # @return [String] adb command with serial
+    def adb_serial
+      "#{adb} #{device_serial_option}"
+    end
+
     # @return [String] adb shell command
     def shell
       "#{adb_serial} shell"
@@ -141,10 +146,6 @@ module DroidAdbs
     def adb
       raise "Please set ANDROID_HOME" unless ENV["ANDROID_HOME"]
       "#{ENV["ANDROID_HOME"]}/platform-tools/adb"
-    end
-
-    def adb_serial
-      "#{adb} #{device_serial_option}"
     end
 
     def device_serial_option
