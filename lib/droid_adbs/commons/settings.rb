@@ -67,7 +67,16 @@ module DroidAdbs
       # animation settings
       # @return [String] message from adb command
       def turn_all_animation_off
-        if ::DroidAdbs::Devices.device_build_version_sdk.to_i < 17
+        turn_all_animation_off_without_reboot
+        intent_boot_completed
+        puts "adopt settings..."
+        false
+      end
+
+      # animation settings
+      # @return [String] message from adb command
+      def turn_all_animation_off_without_reboot
+        unless available_changing_animation?
           puts "the device is not over API Level 17"
           return true
         end
@@ -80,23 +89,32 @@ module DroidAdbs
         scale_off "window_animation_scale"
         scale_off "transition_animation_scale"
         scale_off "animator_duration_scale"
+        false
+      end
+
+      # @return [String] message from adb command
+      def turn_all_animation_on
+        turn_all_animation_on_without_reboot
         intent_boot_completed
         puts "adopt settings..."
         false
       end
 
       # @return [String] message from adb command
-      def turn_all_animation_on
-        if ::DroidAdbs::Devices.device_build_version_sdk.to_i < 17
+      def turn_all_animation_on_without_reboot
+        unless available_changing_animation?
           puts "the device is not over API Level 17"
+          return true
+        end
+
+        if all_animation_on?
+          puts "already all animation settings are on"
           return true
         end
 
         scale_on "window_animation_scale"
         scale_on "transition_animation_scale"
         scale_on "animator_duration_scale"
-        intent_boot_completed
-        puts "adopt settings..."
         false
       end
 
@@ -133,8 +151,17 @@ module DroidAdbs
         get_scale_of "transition_animation_scale"
       end
 
+      def available_changing_animation?
+        ::DroidAdbs::Devices.device_build_version_sdk.to_i >= 17
+      end
+
       def all_animation_off?
         return true if window_animation_scale == 0 && transition_animation_scale == 0 && animator_duration_scale == 0
+        false
+      end
+
+      def all_animation_on?
+        return true if window_animation_scale == 1 && transition_animation_scale == 1 && animator_duration_scale == 1
         false
       end
 
