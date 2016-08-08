@@ -37,6 +37,25 @@ module DroidAdbs
       result
     end
 
+    # @param app [String] application path
+    # @return [String] message from adb command
+    def install_with_grant(app)
+      result = `#{adb_serial} install -r -g #{app}`
+      fail "invalid APK" if result.include?("Invalid APK file:")
+      fail "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
+      result
+    end
+
+    # @param app [String] application path
+    # @return [String] message from adb command
+    def install_with(app, option = "")
+      result = `#{adb_serial} install #{option} #{app}`
+      fail "invalid APK" if result.include?("Invalid APK file:")
+      fail "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
+      result
+    end
+
+
     # @param package [String] package name you would like to uninstall
     # @return [String] message from adb command
     def uninstall(package)
