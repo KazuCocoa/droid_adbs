@@ -3,6 +3,7 @@ require_relative "droid_adbs/commons/settings"
 require_relative "droid_adbs/commons/devices"
 require_relative "droid_adbs/commons/backup"
 require_relative "droid_adbs/commons/ime"
+require_relative "droid_adbs/commons/wm"
 require_relative "droid_adbs/aapt"
 
 module DroidAdbs
