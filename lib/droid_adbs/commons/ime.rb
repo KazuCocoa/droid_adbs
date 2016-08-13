@@ -4,8 +4,15 @@ module DroidAdbs
   module IME
     class << self
       # @return [String] message from adb command
-      def get_ime_list
+      def get_ime_with_string
         `#{::DroidAdbs.shell} ime list`.chomp
+      end
+
+      # @return [Array] Array of IME ID list such as ["com.agilebits.onepassword/.filling.FillingInputMethodService",
+      #   com.google.android.googlequicksearchbox/com.google.android.voicesearch.ime.VoiceInputMethodService"]
+      def get_ime_list
+        string = get_ime_with_string
+        parse_ime_list(string)
       end
 
       # @param [String] ime_id ID provided by IME such as "com.google.android.inputmethod.japanese/.MozcService"
