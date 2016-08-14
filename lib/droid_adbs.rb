@@ -30,7 +30,7 @@ module DroidAdbs
       `#{adb} devices`.scan(/^.*\t/).map(&:strip)
     end
 
-    # @param app [String] application path
+    # @param [String] app Application path
     # @return [String] message from adb command
     def install(app)
       result = `#{adb_serial} install -r #{app}`
@@ -39,7 +39,7 @@ module DroidAdbs
       result
     end
 
-    # @param app [String] application path
+    # @param [String] app Application path
     # @return [String] message from adb command
     def install_with_grant(app)
       result = `#{adb_serial} install -r -g #{app}`
@@ -48,7 +48,7 @@ module DroidAdbs
       result
     end
 
-    # @param app [String] application path
+    # @param [String] app Application path
     # @return [String] message from adb command
     def install_with(app, option = "")
       result = `#{adb_serial} install #{option} #{app}`
@@ -58,27 +58,27 @@ module DroidAdbs
     end
 
 
-    # @param package [String] package name you would like to uninstall
+    # @param [String] package A package name you would like to uninstall
     # @return [String] message from adb command
     def uninstall(package)
       `#{adb_serial} uninstall #{package}`
     end
 
-    # @param package [String] package name you would like to uninstall similar ones
+    # @param [String] package A package name you would like to uninstall similar ones
     # @return [String] message from adb command
     def uninstall_similar(package)
       installed_packages = installed_similar(package)
       installed_packages.each { |pack| `#{adb_serial} uninstall #{pack}` }
     end
 
-    # @param package [String] package name you would like to delete data in device local
+    # @param [String] package A package name you would like to delete data in device local
     # @return [String] message from adb command
     def delete_data(package)
       result = `#{shell} pm clear #{package}`.strip
       puts "failed to delete data" unless result == "Success"
     end
 
-    # @param package [String] package name you would like to check installed or not
+    # @param [String] package A package name you would like to check installed or not
     # @return [Bool] If the package installed, return true. Else return false
     def installed?(package)
       result = `#{shell} pm list packages -e #{package}`.strip
@@ -86,20 +86,20 @@ module DroidAdbs
       false
     end
 
-    # @param package [String] package name you would like to collect similar package
+    # @param [String] package A package name you would like to collect similar package
     # @return [Array] all package names
     def installed_similar(package)
       result = `#{shell} pm list packages -e #{package}`.strip
       result.each_line.map { |pack|  pack.strip.sub("package:", "") }
     end
 
-    # @param activity [String] activity name you would like to launch
+    # @param [String] activity An activity name you would like to launch
     # @return [String] message from adb command
     def start(activity)
       `#{shell} am start -n #{activity}`
     end
 
-    # @param account_type [String] accountType of Android OS
+    # @param [String] account_type accountType of Android OS
     # @return [String] message from adb command
     def launch_login_activity(account_type)
       if ::DroidAdbs::Devices.device_build_version_sdk.to_i >= 21
@@ -109,14 +109,14 @@ module DroidAdbs
       end
     end
 
-    # @param activity [String] activity name you would like to stop
+    # @param [String] package A package name you would like to stop
     # @return [String] message from adb command
     def force_stop(package)
       `#{shell} am force-stop #{package}`
     end
 
-    # @param broadcats_item [String] Target item for broadcast
-    # @param broadcast_extra [String] putExtra to send broadcast.
+    # @param [String] broadcats_item Target item for broadcast
+    # @param [String] broadcast_extra putExtra to send broadcast.
     # @return [String] message from adb command
     def send_broadcast(broadcats_item, broadcast_extra = "")
       `#{shell} am broadcast -a #{broadcats_item} #{broadcast_extra}`
@@ -134,14 +134,14 @@ module DroidAdbs
       `#{shell} dumpsys window windows | grep -E "mCurrentFocus|mFocusedApp"`
     end
 
-    # @param [String] referrer to broadcast
+    # @param referrer [String] To broadcast
     # @return [String] message from adb command
     def install_referrer_broadcast(referrer)
       `#{shell} broadcast window -a com.android.vending.INSTALL_REFERRER --include-stopped-packages --es referrer #{referrer}`
     end
 
     # send referrer for TVs
-    # @param [String] referrer to broadcast
+    # @param [String] ref to broadcast
     # @return [String] message from adb command
     def broad_install_referrer(ref)
       `#{shell} am broadcast -a com.android.vending.INSTALL_REFERRER --include-stopped-packages --es referrer #{ref}`
@@ -154,10 +154,13 @@ module DroidAdbs
       `#{shell} input keyevent 82`
     end
 
+    # @param [String] text Pin code to unlock
+    # @return [String] message from adb command
     def unlock_with_pin(text)
       `#{shell} input text #{text} && #{shell} input keyevent 66`
     end
 
+    # @return [String] message from adb command
     def screen_on_or_off
       `#{shell} input keyevent 26`
     end
@@ -174,4 +177,4 @@ module DroidAdbs
       "-s #{device_serial}"
     end
   end
-end
+end # module DroidAdbs

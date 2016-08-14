@@ -19,7 +19,15 @@ Or install it yourself as:
 
 ## Usage
 
-TODO
+Example:
+
+```
+::DroidAdbs.device_serial = "device cerial you would like to connect" # set device_serial
+::DroidAdbs devices # means `adb devices`
+::DroidAdbs.install(app_path) # install `app_path` to the device
+```
+
+Please read yard documents if you would like to know more.
 
 ## Development
 
@@ -29,6 +37,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Rubygems
 - https://rubygems.org/gems/droid_adbs
+
+## Documents
+You can get document by `yard` command.
 
 ## Contributing
 
