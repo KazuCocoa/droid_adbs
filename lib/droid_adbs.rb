@@ -34,8 +34,9 @@ module DroidAdbs
     # @return [String] message from adb command
     def install(app)
       result = `#{adb_serial} install -r #{app}`
-      fail "invalid APK" if result.include?("Invalid APK file:")
-      fail "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
+      raise RuntimeError, result if result.include?("Error:")
+      raise RuntimeError, "invalid APK" if result.include?("Invalid APK file:")
+      raise RuntimeError, "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
       result
     end
 
@@ -43,8 +44,9 @@ module DroidAdbs
     # @return [String] message from adb command
     def install_with_grant(app)
       result = `#{adb_serial} install -r -g #{app}`
-      fail "invalid APK" if result.include?("Invalid APK file:")
-      fail "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
+      raise RuntimeError, result if result.include?("Error:")
+      raise RuntimeError, "invalid APK" if result.include?("Invalid APK file:")
+      raise RuntimeError, "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
       result
     end
 
@@ -52,8 +54,9 @@ module DroidAdbs
     # @return [String] message from adb command
     def install_with(app, option = "")
       result = `#{adb_serial} install #{option} #{app}`
-      fail "invalid APK" if result.include?("Invalid APK file:")
-      fail "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
+      raise RuntimeError, result if result.include?("Error:")
+      raise RuntimeError, "invalid APK" if result.include?("Invalid APK file:")
+      raise RuntimeError, "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
       result
     end
 
