@@ -65,11 +65,7 @@ class DroidAdbsTest < Minitest::Test
   end
 
   def test_install_referrer_broadcast
-    assert(::DroidAdbs.install_referrer_broadcast)
-  end
-
-  def test_install_referrer_broadcast
-    skip("depends on environment")
+    assert(::DroidAdbs.install_referrer_broadcast("referer"))
   end
 
   def test_broad_install_referrer

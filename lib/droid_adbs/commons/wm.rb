@@ -1,12 +1,10 @@
-require_relative "../../droid_adbs"
-
 module DroidAdbs
   module WM
     class << self
       # @return [Integer] density. If this method fail to get density, then return 0.
       def get_density
         result = `#{::DroidAdbs.shell} wm density`.chomp
-        return 0 unless result.match /\APhysical density:.*/
+        return 0 unless result.match(/\APhysical density:.*/)
         result.split(/\s/).last.to_i
       end
 

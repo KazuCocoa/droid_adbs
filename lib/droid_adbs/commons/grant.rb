@@ -1,5 +1,3 @@
-require_relative "../../droid_adbs"
-
 module DroidAdbs
   module Grant
     class << self

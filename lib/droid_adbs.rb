@@ -1,11 +1,11 @@
-require_relative "droid_adbs/version"
-require_relative "droid_adbs/commons/settings"
-require_relative "droid_adbs/commons/devices"
-require_relative "droid_adbs/commons/backup"
-require_relative "droid_adbs/commons/ime"
-require_relative "droid_adbs/commons/wm"
-require_relative "droid_adbs/commons/grant"
-require_relative "droid_adbs/aapt"
+require "droid_adbs/version"
+require "droid_adbs/commons/settings"
+require "droid_adbs/commons/devices"
+require "droid_adbs/commons/backup"
+require "droid_adbs/commons/ime"
+require "droid_adbs/commons/wm"
+require  "droid_adbs/commons/grant"
+require "droid_adbs/aapt"
 
 module DroidAdbs
   class << self
