@@ -18,6 +18,16 @@ class DroidAdbsTest < Minitest::Test
     assert_equal("#{@android_adb}  shell", ::DroidAdbs.shell)
   end
 
+  def test_device_serial_push
+    ::DroidAdbs.device_serial = "some-serial"
+    assert_equal("#{@android_adb} -s some-serial push", ::DroidAdbs.push)
+  end
+
+  def test_no_device_serial_push
+    ::DroidAdbs.device_serial = ""
+    assert_equal("#{@android_adb}  push", ::DroidAdbs.push)
+  end
+
   def test_install_package
     skip("install package depends on package environment")
   end

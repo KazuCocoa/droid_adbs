@@ -21,6 +21,11 @@ module DroidAdbs
       "#{adb_serial} shell"
     end
 
+    # @return [String] adb push command
+    def push
+      "#{adb_serial} push"
+    end
+
     # @return [String] Get results of adb devices command
     def devices
       `#{adb} devices`
