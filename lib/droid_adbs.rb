@@ -28,7 +28,7 @@ module DroidAdbs
 
     # @return [String] Get results of adb devices command
     def devices
-      `#{adb} devices`
+      `#{adb} devices`.strip
     end
 
     # @return [Array] array of serial number to specify adb command
@@ -39,7 +39,7 @@ module DroidAdbs
     # @param [String] app Application path
     # @return [String] message from adb command
     def install(app)
-      result = `#{adb_serial} install -r #{app}`
+      result = `#{adb_serial} install -r #{app}`.strip
       raise RuntimeError, result if result.include?("Error:")
       raise RuntimeError, "invalid APK" if result.include?("Invalid APK file:")
       raise RuntimeError, "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
@@ -49,7 +49,7 @@ module DroidAdbs
     # @param [String] app Application path
     # @return [String] message from adb command
     def install_with_grant(app)
-      result = `#{adb_serial} install -gr #{app}`
+      result = `#{adb_serial} install -gr #{app}`.strip
       raise RuntimeError, result if result.include?("Error:")
       raise RuntimeError, "invalid APK" if result.include?("Invalid APK file:")
       raise RuntimeError, "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
@@ -59,7 +59,7 @@ module DroidAdbs
     # @param [String] app Application path
     # @return [String] message from adb command
     def install_with(app, option = "")
-      result = `#{adb_serial} install #{option} #{app}`
+      result = `#{adb_serial} install #{option} #{app}`.strip
       raise RuntimeError, result if result.include?("Error:")
       raise RuntimeError, "invalid APK" if result.include?("Invalid APK file:")
       raise RuntimeError, "failed to update apk because INSTALL_FAILED_VERSION_DOWNGRADE" if result.include?("INSTALL_FAILED_VERSION_DOWNGRADE")
@@ -70,14 +70,14 @@ module DroidAdbs
     # @param [String] package A package name you would like to uninstall
     # @return [String] message from adb command
     def uninstall(package)
-      `#{adb_serial} uninstall #{package}`
+      `#{adb_serial} uninstall #{package}`.strip
     end
 
     # @param [String] package A package name you would like to uninstall similar ones
-    # @return [String] message from adb command
+    # @return [Array] messages from adb command
     def uninstall_similar(package)
       installed_packages = installed_similar(package)
-      installed_packages.each { |pack| `#{adb_serial} uninstall #{pack}` }
+      installed_packages.map { |pack| `#{adb_serial} uninstall #{pack}`.strip }
     end
 
     # @param [String] package A package name you would like to delete data in device local
@@ -85,34 +85,36 @@ module DroidAdbs
     def delete_data(package)
       result = `#{shell} pm clear #{package}`.strip
       puts "failed to delete data" unless result == "Success"
+      result
     end
 
     # @param [String] package A package name you would like to check installed or not
     # @return [Bool] If the package installed, return true. Else return false
     def installed?(package)
-      result = `#{shell} pm list packages -e #{package}`.strip
-      return true if result == "package:#{package}"
+      packages = `#{shell} pm list packages -e #{package}`.strip
+      result = packages.each_line.find { |p| p == "package:#{package}" }
+      return true if result
       false
     end
 
     # @param [String] package A package name you would like to collect similar package
     # @return [Array] all package names
     def installed_similar(package)
-      result = `#{shell} pm list packages -e #{package}`.strip
-      result.each_line.map { |pack|  pack.strip.sub("package:", "") }
+      packages = `#{shell} pm list packages -e #{package}`.strip
+      packages.each_line.map { |pack|  pack.strip.sub("package:", "") }
     end
 
     # @param [String] activity An activity name you would like to launch
     # @return [String] message from adb command
     def start(activity)
-      `#{shell} am start -n #{activity}`
+      `#{shell} am start -n #{activity}`.strip
     end
 
     # @param [String] account_type accountType of Android OS
     # @return [String] message from adb command
     def launch_login_activity(account_type)
       if ::DroidAdbs::Devices.device_build_version_sdk.to_i >= 21
-        `#{shell} am start -a android.settings.ADD_ACCOUNT_SETTINGS --esa authorities #{account_type}`
+        `#{shell} am start -a android.settings.ADD_ACCOUNT_SETTINGS --esa authorities #{account_type}`.strip
       else
         puts "Can't launch LoginActivity.java because version of sdk in the target device is lower than 21."
       end
@@ -121,14 +123,14 @@ module DroidAdbs
     # @param [String] package A package name you would like to stop
     # @return [String] message from adb command
     def force_stop(package)
-      `#{shell} am force-stop #{package}`
+      `#{shell} am force-stop #{package}`.strip
     end
 
     # @param [String] broadcats_item Target item for broadcast
     # @param [String] broadcast_extra putExtra to send broadcast.
     # @return [String] message from adb command
     def send_broadcast(broadcats_item, broadcast_extra = "")
-      `#{shell} am broadcast -a #{broadcats_item} #{broadcast_extra}`
+      `#{shell} am broadcast -a #{broadcats_item} #{broadcast_extra}`.strip
     end
 
     ## resources
@@ -140,38 +142,38 @@ module DroidAdbs
     ### Activity
     # @return [String] message from adb command regarding current activities
     def current_activity
-      `#{shell} dumpsys window windows | grep -E "mCurrentFocus|mFocusedApp"`
+      `#{shell} dumpsys window windows | grep -E "mCurrentFocus|mFocusedApp"`.strip
     end
 
     # @param referrer [String] To broadcast
     # @return [String] message from adb command
     def install_referrer_broadcast(referrer)
-      `#{shell} broadcast window -a com.android.vending.INSTALL_REFERRER --include-stopped-packages --es referrer #{referrer}`
+      `#{shell} broadcast window -a com.android.vending.INSTALL_REFERRER --include-stopped-packages --es referrer #{referrer}`.strip
     end
 
     # send referrer for TVs
     # @param [String] ref to broadcast
     # @return [String] message from adb command
     def broad_install_referrer(ref)
-      `#{shell} am broadcast -a com.android.vending.INSTALL_REFERRER --include-stopped-packages --es referrer #{ref}`
+      `#{shell} am broadcast -a com.android.vending.INSTALL_REFERRER --include-stopped-packages --es referrer #{ref}`.strip
     end
 
     # Emulator should be unlocked after launch emulator with -wipe-data option
     # Should unlock screen if current focus is like `mCurrentFocus=Window{2e85df18 u0 StatusBar}` .
     # @return [String] message from adb command
     def unlock_without_pin
-      `#{shell} input keyevent 82`
+      `#{shell} input keyevent 82`.strip
     end
 
     # @param [String] text Pin code to unlock
     # @return [String] message from adb command
     def unlock_with_pin(text)
-      `#{shell} input text #{text} && #{shell} input keyevent 66`
+      `#{shell} input text #{text} && #{shell} input keyevent 66`.strip
     end
 
     # @return [String] message from adb command
     def screen_on_or_off
-      `#{shell} input keyevent 26`
+      `#{shell} input keyevent 26`.strip
     end
 
     private

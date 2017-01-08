@@ -3,7 +3,7 @@ module DroidAdbs
     class << self
       # @return [String] message from adb command as pure string.
       def get_ime_with_string
-        `#{::DroidAdbs.shell} ime list`.chomp
+        `#{::DroidAdbs.shell} ime list`.strip
       end
 
       # @return [Array] Array of IME ID list
@@ -22,7 +22,7 @@ module DroidAdbs
       #     If it succeeded to set IME, then it returns "Input method com.google.android.inputmethod.japanese/.MozcService selected"
       #     If it failed to set IME because of no ID, then it returns "Error: Unknown id: ime_id"
       def set_ime(ime_id)
-        `#{::DroidAdbs.shell} ime set #{ime_id}`.chomp
+        `#{::DroidAdbs.shell} ime set #{ime_id}`.strip
       end
 
       # @param [String] ime_lists

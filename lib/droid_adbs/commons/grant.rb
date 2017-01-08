@@ -5,7 +5,7 @@ module DroidAdbs
       # @param [Object] permission Permission you would like to allow
       # @return [String] message from adb command
       def grant(package:, permission:)
-        result = `#{::DroidAdbs.shell} pm grant #{package} #{permission}`.chomp
+        result = `#{::DroidAdbs.shell} pm grant #{package} #{permission}`.strip
 
         unless result.empty?
           exception = "java.lang.IllegalArgumentException:"

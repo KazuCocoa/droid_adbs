@@ -45,7 +45,8 @@ class DroidAdbsTest < Minitest::Test
   end
 
   def test_installed_similar
-    assert_equal(["com.android.settings"], ::DroidAdbs.installed_similar("com.android.settings"))
+    packages = ::DroidAdbs.installed_similar("com.android.settings")
+    assert packages.size >= 1
   end
 
   def test_start_activity

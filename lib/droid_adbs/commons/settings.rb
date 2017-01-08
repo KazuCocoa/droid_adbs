@@ -3,63 +3,67 @@ module DroidAdbs
     class << self
       # @return [String] message from adb command
       def disable_always_finish_activities
-        `#{::DroidAdbs.shell} settings put global always_finish_activities 0`
+        `#{::DroidAdbs.shell} settings put global always_finish_activities 0`.strip
       end
 
       # @return [String] message from adb command
       def enable_always_finish_activities
-        `#{::DroidAdbs.shell} settings put global always_finish_activities 1`
+        `#{::DroidAdbs.shell} settings put global always_finish_activities 1`.strip
       end
 
       ### Network mode
       # @return [String] message from adb command
       def turn_airplain_mode_on
-        `#{::DroidAdbs.shell} settings put global airplane_mode_on 1`
-        `#{::DroidAdbs.shell} am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true`
+        result1 = `#{::DroidAdbs.shell} settings put global airplane_mode_on 1`
+        result2 = `#{::DroidAdbs.shell} am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true`.strip
+        result1.concat result2
       end
 
       # @return [String] message from adb command
       def turn_airplain_mode_off
-        `#{::DroidAdbs.shell} settings put global airplane_mode_on 0`
-        `#{::DroidAdbs.shell} am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false`
+        result1 = `#{::DroidAdbs.shell} settings put global airplane_mode_on 0`
+        result2 = `#{::DroidAdbs.shell} am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false`.strip
+        result1.concat result2
       end
 
       # @return [String] message from adb command
       def turn_wifi_on
-        `#{::DroidAdbs.shell} settings put global wifi_on 1`
-        `#{::DroidAdbs.shell} am broadcast -a android.intent.action.WIFI_ON --ez state false`
+        result1 = `#{::DroidAdbs.shell} settings put global wifi_on 1`
+        result2 = `#{::DroidAdbs.shell} am broadcast -a android.intent.action.WIFI_ON --ez state false`.strip
+        result1.concat result2
       end
 
       # @return [String] message from adb command
       def turn_wifi_off
-        `#{::DroidAdbs.shell} settings put global wifi_on 0`
-        `#{::DroidAdbs.shell} am broadcast -a android.intent.action.WIFI_ON --ez state false`
+        result1 = `#{::DroidAdbs.shell} settings put global wifi_on 0`
+        result2 = `#{::DroidAdbs.shell} am broadcast -a android.intent.action.WIFI_ON --ez state false`.strip
+        result1.concat result2
       end
 
       # @return [String] message from adb command
       def turn_cpu_monitoring_on
-        `#{::DroidAdbs.shell} settings put global show_processes 1`
+        `#{::DroidAdbs.shell} settings put global show_processes 1`.strip
       end
 
       # @return [String] message from adb command
       def turn_cpu_monitoring_off
-        `#{::DroidAdbs.shell} settings put global show_processes 0`
+        `#{::DroidAdbs.shell} settings put global show_processes 0`.strip
       end
 
       # @return [String] message from adb command
       def turn_auto_time_on
-        `#{::DroidAdbs.shell} settings put global auto_time 1`
+        `#{::DroidAdbs.shell} settings put global auto_time 1`.strip
       end
 
       # @return [String] message from adb command
       def turn_auto_time_off
-        `#{::DroidAdbs.shell} settings put global auto_time 0`
+        `#{::DroidAdbs.shell} settings put global auto_time 0`.strip
       end
 
       # @return [String] message from adb command
       def set_date_to(yyyymmdd, hhmmss)
         turn_auto_time_off
-        `#{::DroidAdbs.shell} date -s #{yyyymmdd}.#{hhmmss}`
+        `#{::DroidAdbs.shell} date -s #{yyyymmdd}.#{hhmmss}`.strip
       end
 
       # animation settings

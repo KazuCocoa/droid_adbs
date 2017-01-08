@@ -3,14 +3,14 @@ module DroidAdbs
     class << self
       # @return [Integer] density. If this method fail to get density, then return 0.
       def get_density
-        result = `#{::DroidAdbs.shell} wm density`.chomp
+        result = `#{::DroidAdbs.shell} wm density`.strip
         return 0 unless result.match(/\APhysical density:.*/)
         result.split(/\s/).last.to_i
       end
 
       # @return [String] message from adb commands
       def reset_density
-        `#{::DroidAdbs.shell} wm density reset`.chomp
+        `#{::DroidAdbs.shell} wm density reset`.strip
       end
 
       # Don't forget to call `reset_density` after change density via adb
@@ -28,7 +28,7 @@ module DroidAdbs
                     else # include :normal
                       base_density
                   end
-        `#{::DroidAdbs.shell} wm density #{density}`.chomp
+        `#{::DroidAdbs.shell} wm density #{density}`.strip
       end
 
     end
