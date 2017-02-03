@@ -4,7 +4,8 @@ require "droid_adbs/commons/devices"
 require "droid_adbs/commons/backup"
 require "droid_adbs/commons/ime"
 require "droid_adbs/commons/wm"
-require  "droid_adbs/commons/grant"
+require "droid_adbs/commons/grant"
+require "droid_adbs/commons/logcat"
 require "droid_adbs/aapt"
 
 module DroidAdbs
