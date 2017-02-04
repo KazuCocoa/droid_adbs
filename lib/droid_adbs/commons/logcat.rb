@@ -32,15 +32,23 @@ module DroidAdbs
       # @return [String|nil] Return a fatal exception
       def filter_fatal_exception(logcat)
         start_mark, end_mark = nil, nil
+        ids_and_errors = []
         logcat.each_line.reduce("") do |memo, line|
           if !start_mark
             start_mark = /.+ FATAL EXCEPTION:.+/.match(line)
-            memo.concat(line) if start_mark
+            if start_mark
+              memo.concat(line)
+              # ["01-24", "12:24:11.667", "10491", "10491", "E", "AndroidRuntime:", "FATAL", "EXCEPTION:", "main"]
+              ids_and_errors = line.split " "
+            end
           elsif !end_mark
-            end_mark = /.+	[.]{3} [0-9]+ more/.match(line)
-            at_mark = /.+	at .+/.match(line)
-            caused_by = /.+ Caused by: .+/.match(line)
-            memo.concat line # if end_mark
+            # ["01-28", "15:26:25.102", "20019", "29842", "E", "AndroidRuntime:", "at", "com.fingerprints.sensor.FingerprintSensor.waitForFingerAndCaptureImage(Native", "Method)"]
+            split_line = line.split " "
+            if split_line[0..3] == ids_and_errors[0..3]
+              memo.concat line # if end_mark
+            else
+              end_mark = line
+            end
           end
           memo
         end

@@ -138,8 +138,13 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
 02-04 06:54:05.759  6550  6687 E ConnectivityService: RemoteException caught trying to send a callback msg for NetworkRequest [ id=472, legacyType=-1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED] ]
   EXCEPTION
 
-  def _test_filter_fatal_exception_no_more
+  def test_filter_fatal_exception_no_more
     assert_equal(FAITAL_EXCEPTION_EXPECT,
                  ::DroidAdbs::Logcat.filter_fatal_exception(FAITAL_EXCEPTION))
+  end
+
+  def test_filter_fatal_exception_no_more_any_fatals
+    assert_equal(FAITAL_EXCEPTION_EXPECT,
+                 ::DroidAdbs::Logcat.filter_fatal_exception(FAITAL_EXCEPTION * 2))
   end
 end
