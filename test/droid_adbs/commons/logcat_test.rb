@@ -152,4 +152,13 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
     assert_equal([FATAL_EXCEPTION_MORE_EXPECT, FATAL_EXCEPTION_EXPECT],
                  ::DroidAdbs::Logcat.filter_fatal_exceptions(FATAL_EXCEPTION_MORE + FATAL_EXCEPTION))
   end
+
+
+  def test_filter_no_fatal_exception
+    assert_equal(nil, ::DroidAdbs::Logcat.filter_fatal_exception(""))
+  end
+
+  def test_filter_no_fatal_exceptions
+    assert_equal([], ::DroidAdbs::Logcat.filter_fatal_exceptions(""))
+  end
 end

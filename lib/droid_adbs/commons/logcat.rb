@@ -35,7 +35,7 @@ module DroidAdbs
       end
 
       # @param [String] logcat
-      # @return [Array[String|nil]] Return a fatal exception
+      # @return [Array] Return a fatal exception
       def filter_fatal_exceptions(logcat)
         do_filter_fatal_exceptions(logcat)[:exceptions]
       end
