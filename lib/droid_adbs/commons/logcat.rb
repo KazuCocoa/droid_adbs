@@ -31,45 +31,40 @@ module DroidAdbs
       # @param [String] logcat
       # @return [String|nil] Return a fatal exception
       def filter_fatal_exception(logcat)
-        do_filter_fatal_exceptions(logcat)[:exceptions].first
+        do_filter_fatal_exceptions(logcat).first
       end
 
       # @param [String] logcat
       # @return [Array] Return a fatal exception
       def filter_fatal_exceptions(logcat)
-        do_filter_fatal_exceptions(logcat)[:exceptions]
+        do_filter_fatal_exceptions(logcat)
       end
 
       private
 
       def do_filter_fatal_exceptions(logcat)
-        start_mark, end_mark, ids_and_errors = nil, nil, []
+        has_exception, end_exception, split_line = false, false, []
+        tmp_memo = {last_exception: "", exceptions: []}
 
-        logcat.each_line.reduce({exception: "", exceptions: []}) do |memo, line|
-          if !start_mark
-            start_mark = /.+ FATAL EXCEPTION:.+/.match(line)
-            if start_mark
-              memo[:exception].concat(line)
-              # ["01-24", "12:24:11.667", "10491", "10491", "E", "AndroidRuntime:", "FATAL", "EXCEPTION:", "main"]
-              ids_and_errors = split_lines_with_space(line)
+        logcat.each_line.reduce(tmp_memo) { |memo, line|
+          if !has_exception
+            has_exception = has_fatal_exception?(line)
+            if has_exception
+              memo[:last_exception].concat(line)
+              split_line = line.split(/\s/)
             end
-          elsif !end_mark
-            # ["01-28", "15:26:25.102", "20019", "29842", "E", "AndroidRuntime:", "at", "com.fingerprints.sensor.FingerprintSensor.waitForFingerAndCaptureImage(Native", "Method)"]
-            split_line = split_lines_with_space(line)
-            if compare_lines split_line, ids_and_errors
-              memo[:exception].concat(line) # if end_mark
-            else
-              end_mark = line
-            end
+          elsif !end_exception
+            compare_lines(line.split(/\s/), split_line) ? memo[:last_exception].concat(line) : end_exception = true
           end
 
-          if end_mark
-            memo[:exceptions].push memo[:exception] if !memo[:exception].nil? && !memo[:exception].empty?
-            start_mark, end_mark, memo[:exception] = nil, nil, ""
+          # store last exception and clear local variables.
+          if end_exception
+            memo[:exceptions].push memo[:last_exception] if !memo[:last_exception].nil? && !memo[:last_exception].empty?
+            has_exception, end_exception, memo[:last_exception], split_line = false, false, "", []
           end
 
           memo
-        end
+        }[:exceptions]
       end
 
       def validate_log_level(log_level)
@@ -80,8 +75,9 @@ module DroidAdbs
         log_level.to_s.upcase
       end
 
-      def split_lines_with_space(line)
-        line.split " "
+      def has_fatal_exception?(line)
+        result = /.+ FATAL EXCEPTION:.+/.match(line)
+        result.nil? ? false : true
       end
 
       def compare_lines(line1, line2)
