@@ -28,6 +28,24 @@ module DroidAdbs
         `#{::DroidAdbs.shell} logcat -d *:W | grep "SIGSEGV"`.strip
       end
 
+      # @param [String] logcat
+      # @return [String|nil] Return a fatal exception
+      def filter_fatal_exception(logcat)
+        start_mark, end_mark = nil, nil
+        logcat.each_line.reduce("") do |memo, line|
+          if !start_mark
+            start_mark = /.+ FATAL EXCEPTION:.+/.match(line)
+            memo.concat(line) if start_mark
+          elsif !end_mark
+            end_mark = /.+	[.]{3} [0-9]+ more/.match(line)
+            at_mark = /.+	at .+/.match(line)
+            caused_by = /.+ Caused by: .+/.match(line)
+            memo.concat line # if end_mark
+          end
+          memo
+        end
+      end
+
       private
 
       def validate_log_level(log_level)
