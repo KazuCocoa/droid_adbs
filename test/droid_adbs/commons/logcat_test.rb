@@ -23,7 +23,7 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
     assert_empty(::DroidAdbs::Logcat.get_sigsegv)
   end
 
-  FAITAL_EXCEPTION_MORE_EXPECT =<<-EXCEPTION
+  FATAL_EXCEPTION_MORE_EXPECT =<<-EXCEPTION
 01-24 12:24:11.667 10491 10491 E AndroidRuntime: FATAL EXCEPTION: main
 01-24 12:24:11.667 10491 10491 E AndroidRuntime: Process: com.google.android.music:main, PID: 10491
 01-24 12:24:11.667 10491 10491 E AndroidRuntime: java.lang.RuntimeException: Unable to get provider com.google.android.music.store.MusicContentProvider: java.lang.RuntimeException: Could not connect to the preference service
@@ -54,7 +54,7 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
 01-24 12:24:11.667 10491 10491 E AndroidRuntime: 	... 10 more
   EXCEPTION
   
-  FAITAL_EXCEPTION_MORE =<<-EXCEPTION
+  FATAL_EXCEPTION_MORE =<<-EXCEPTION
 02-04 06:53:50.108  6277  6646 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'UID' not found
 02-04 06:54:05.759  6550  6687 E ConnectivityService: RemoteException caught trying to send a callback msg for NetworkRequest [ id=472, legacyType=-1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED] ]
 01-24 12:24:11.667 10491 10491 E AndroidRuntime: FATAL EXCEPTION: main
@@ -91,16 +91,16 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
 
 
   def test_filter_fatal_exception
-    assert_equal(FAITAL_EXCEPTION_MORE_EXPECT,
-                 ::DroidAdbs::Logcat.filter_fatal_exception(FAITAL_EXCEPTION_MORE))
+    assert_equal(FATAL_EXCEPTION_MORE_EXPECT,
+                 ::DroidAdbs::Logcat.filter_fatal_exception(FATAL_EXCEPTION_MORE))
   end
 
   def test_filter_fatal_exception_any_fatals
-    assert_equal(FAITAL_EXCEPTION_MORE_EXPECT,
-                 ::DroidAdbs::Logcat.filter_fatal_exception(FAITAL_EXCEPTION_MORE * 2))
+    assert_equal(FATAL_EXCEPTION_MORE_EXPECT,
+                 ::DroidAdbs::Logcat.filter_fatal_exception(FATAL_EXCEPTION_MORE + FATAL_EXCEPTION))
   end
 
-  FAITAL_EXCEPTION_EXPECT =<<-EXCEPTION
+  FATAL_EXCEPTION_EXPECT =<<-EXCEPTION
 01-28 15:26:25.102 20019 29842 E AndroidRuntime: FATAL EXCEPTION: Thread-1978
 01-28 15:26:25.102 20019 29842 E AndroidRuntime: Process: com.fingerprints.service, PID: 20019
 01-28 15:26:25.102 20019 29842 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke virtual method 'android.os.Message com.fingerprints.service.FingerprintManager$EventHandler.obtainMessage(int, int, int)' on a null object reference
@@ -117,7 +117,7 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
 01-28 15:26:25.102 20019 29842 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:818)
   EXCEPTION
 
-  FAITAL_EXCEPTION =<<-EXCEPTION
+  FATAL_EXCEPTION =<<-EXCEPTION
 02-04 06:53:50.108  6277  6646 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'UID' not found
 02-04 06:54:05.759  6550  6687 E ConnectivityService: RemoteException caught trying to send a callback msg for NetworkRequest [ id=472, legacyType=-1, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED] ]
 01-28 15:26:25.102 20019 29842 E AndroidRuntime: FATAL EXCEPTION: Thread-1978
@@ -139,12 +139,12 @@ class DroidAdbsCommonsLogcatTest < Minitest::Test
   EXCEPTION
 
   def test_filter_fatal_exception_no_more
-    assert_equal(FAITAL_EXCEPTION_EXPECT,
-                 ::DroidAdbs::Logcat.filter_fatal_exception(FAITAL_EXCEPTION))
+    assert_equal(FATAL_EXCEPTION_EXPECT,
+                 ::DroidAdbs::Logcat.filter_fatal_exception(FATAL_EXCEPTION))
   end
 
   def test_filter_fatal_exception_no_more_any_fatals
-    assert_equal(FAITAL_EXCEPTION_EXPECT,
-                 ::DroidAdbs::Logcat.filter_fatal_exception(FAITAL_EXCEPTION * 2))
+    assert_equal(FATAL_EXCEPTION_EXPECT,
+                 ::DroidAdbs::Logcat.filter_fatal_exception(FATAL_EXCEPTION + FATAL_EXCEPTION_MORE))
   end
 end
