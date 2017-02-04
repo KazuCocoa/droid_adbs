@@ -31,30 +31,46 @@ module DroidAdbs
       # @param [String] logcat
       # @return [String|nil] Return a fatal exception
       def filter_fatal_exception(logcat)
-        start_mark, end_mark = nil, nil
-        ids_and_errors = []
-        logcat.each_line.reduce("") do |memo, line|
+        do_filter_fatal_exceptions(logcat)[:exceptions].first
+      end
+
+      # @param [String] logcat
+      # @return [Array[String|nil]] Return a fatal exception
+      def filter_fatal_exceptions(logcat)
+        do_filter_fatal_exceptions(logcat)[:exceptions]
+      end
+
+      private
+
+      def do_filter_fatal_exceptions(logcat)
+        start_mark, end_mark, ids_and_errors = nil, nil, []
+
+        logcat.each_line.reduce({exception: "", exceptions: []}) do |memo, line|
           if !start_mark
             start_mark = /.+ FATAL EXCEPTION:.+/.match(line)
             if start_mark
-              memo.concat(line)
+              memo[:exception].concat(line)
               # ["01-24", "12:24:11.667", "10491", "10491", "E", "AndroidRuntime:", "FATAL", "EXCEPTION:", "main"]
-              ids_and_errors = line.split " "
+              ids_and_errors = split_lines_with_space(line)
             end
           elsif !end_mark
             # ["01-28", "15:26:25.102", "20019", "29842", "E", "AndroidRuntime:", "at", "com.fingerprints.sensor.FingerprintSensor.waitForFingerAndCaptureImage(Native", "Method)"]
-            split_line = line.split " "
-            if split_line[0..3] == ids_and_errors[0..3]
-              memo.concat line # if end_mark
+            split_line = split_lines_with_space(line)
+            if compare_lines split_line, ids_and_errors
+              memo[:exception].concat(line) # if end_mark
             else
               end_mark = line
             end
           end
+
+          if end_mark
+            memo[:exceptions].push memo[:exception] if !memo[:exception].nil? && !memo[:exception].empty?
+            start_mark, end_mark, memo[:exception] = nil, nil, ""
+          end
+
           memo
         end
       end
-
-      private
 
       def validate_log_level(log_level)
         unless %I(v V d D i I w W e E f F s S).include? log_level
@@ -62,6 +78,14 @@ module DroidAdbs
         end
 
         log_level.to_s.upcase
+      end
+
+      def split_lines_with_space(line)
+        line.split " "
+      end
+
+      def compare_lines(line1, line2)
+        line1[0..3] == line2[0..3]
       end
     end
   end
