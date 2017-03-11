@@ -24,8 +24,8 @@ Example:
 ```
 require 'droid_adbs'
 
-::DroidAdbs.device_serial = "device cerial you would like to connect" # set device_serial
-::DroidAdbs devices # means `adb devices`
+::DroidAdbs.device_serial = "device cerial you would like to connect" # set device_serial as a class variable
+::DroidAdbs.devices # means `adb devices`
 ::DroidAdbs.install(app_path) # install `app_path` to the device
 ```
 
