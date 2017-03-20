@@ -13,6 +13,22 @@ module DroidAdbs
   class << self
     attr_accessor :device_serial
 
+    # @param [String|Integer] ip Port number set to android device.
+    # @return [String] adb command with serial
+    def set_tcpip(ip)
+      `#{adb_serial} tcpip #{ip}`.strip
+    end
+
+    # @param [String] host Host name to android device. e.g. 198.168.255.1
+    # @param [String|Integer] port Port number set to android device with set_tcpip. e.g. 5555(default)
+    # @return [String] adb command with serial
+    def connect(host = 'localhost', port = 5555)
+      connect_to = %(#{host}:#{port})
+
+      self.device_serial = connect_to
+      `#{adb_serial} connect #{connect_to}`.strip
+    end
+
     # @return [String] adb command with serial
     def adb_serial
       "#{adb} #{device_serial_option}"
