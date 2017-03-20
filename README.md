@@ -29,6 +29,15 @@ require 'droid_adbs'
 ::DroidAdbs.install(app_path) # install `app_path` to the device
 ```
 
+Send command over tcp:
+
+```
+::DroidAdbs.device_serial = "device cerial you would like to connect" # set device_serial as a class variable
+::DroidAdbs.set_tcpip = 5555 # set ip to a device
+::DroidAdbs.connect("198.168.255.1", 5555) # connect to the device. `device_serial` is updated with host:port. 
+::DroidAdbs.install(app_path) # install `app_path` to the device over tcp
+```
+
 Please read yard documents if you would like to know more.
 
 ## Development
