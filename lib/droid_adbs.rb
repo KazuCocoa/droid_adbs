@@ -102,7 +102,7 @@ module DroidAdbs
     # @return [String] message from adb command
     def delete_data(package)
       result = `#{shell} pm clear #{package}`.strip
-      puts "failed to delete data" unless result == "Success"
+      puts "failed to delete data:[original log] #{result}" unless result == "Success"
       result
     end
 
