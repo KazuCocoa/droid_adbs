@@ -194,6 +194,11 @@ module DroidAdbs
       `#{shell} input keyevent 26`.strip
     end
 
+    # @return [String] message from adb command
+    def device_screen
+      `#{shell} input keyevent KEYCODE_HOME`.strip
+    end
+
     private
 
     def adb
