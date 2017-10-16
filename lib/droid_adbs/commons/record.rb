@@ -5,7 +5,7 @@ module DroidAdbs
 
       private
 
-      attr_accessor :file_name
+      attr_accessor :file_name, :recording
 
       public
 
@@ -14,11 +14,15 @@ module DroidAdbs
         @size = size
 
         ::DroidAdbs.device_serial = device_serial if device_serial
+        @recording = false
       end
 
       def record(file_name:)
+        raise "Recording on the other process" if @recording
+
         @file_name = file_name
 
+        @recording = true
         @process_id = fork do
           exec "#{::DroidAdbs.shell} screenrecord --bit-rate #{@bit_rate} --size #{@size} /sdcard/#{@file_name}.mp4"
         end
@@ -26,6 +30,7 @@ module DroidAdbs
 
       def kill
         Process.kill(:SIGINT, @process_id)
+        @recording = false
 
         # Download the video
         system "#{::DroidAdbs.adb_serial} pull /sdcard/#{@file_name}.mp4 #{Dir.pwd}"
