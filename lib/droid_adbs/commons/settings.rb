@@ -66,6 +66,25 @@ module DroidAdbs
         `#{::DroidAdbs.shell} date -s #{yyyymmdd}.#{hhmmss}`.strip
       end
 
+      # Only for rooted devices.
+      #
+      # Default SET format is "MMDDhhmm[[CC]YY][.ss]", that's (2 digits each)
+      # month, day, hour (0-23), and minute. Optionally century, year, and second.
+      # 060910002016.00
+      # Thu Jun  9 10:00:00 GMT 2016
+      # @example
+      #
+      #   # Error case
+      #   ::DroidAdbs::Settings.set_date '060910002016.00' #=> "date: cannot set date: Operation not permitted\r\nThu Jun  9 10:00:00 JST 2016"
+      #
+      def set_date(date)
+        turn_auto_time_off
+        result = `#{::DroidAdbs.shell} date #{date}`.strip
+        `#{::DroidAdbs.shell} am broadcast -a android.intent.action.TIME_SET`
+
+        result
+      end
+
       # animation settings
       # @return [String] message from adb command
       def turn_all_animation_off
