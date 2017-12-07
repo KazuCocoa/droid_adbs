@@ -9,7 +9,8 @@ module DroidAdbs
 
         unless result.empty?
           exception = "java.lang.IllegalArgumentException:"
-          error_message = result.each_line.find { |line| line.include? exception }.chomp
+          error_message = result.each_line.find { |line| line.include? exception }
+          error_message = error_message.chomp unless error_message.nil?
           raise RuntimeError, message unless error_message.empty?
         end
 
@@ -24,7 +25,8 @@ module DroidAdbs
 
         unless result.empty?
           exception = "java.lang.IllegalArgumentException:"
-          error_message = result.each_line.find { |line| line.include? exception }.chomp
+          error_message = result.each_line.find { |line| line.include? exception }
+          error_message = error_message.chomp unless error_message.nil?
           raise RuntimeError, message unless error_message.empty?
         end
 
