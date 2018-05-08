@@ -38,6 +38,14 @@ Send command over tcp:
 ::DroidAdbs.install(app_path) # install `app_path` to the device over tcp
 ```
 
+Use apkanalyzer tools.
+
+```
+@analyzer = DroidAdbs::Apkanalyzer.new "test/data/api.apk"
+@analyzer.manifest_version_name
+```
+
+
 Please read yard documents if you would like to know more.
 
 ## Development
