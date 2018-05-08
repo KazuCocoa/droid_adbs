@@ -9,6 +9,7 @@ require "droid_adbs/commons/logcat"
 require "droid_adbs/commons/dumpsys"
 require "droid_adbs/commons/record"
 require "droid_adbs/aapt"
+require "droid_adbs/apkanalyzer"
 
 module DroidAdbs
   class << self
