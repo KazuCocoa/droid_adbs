@@ -66,6 +66,12 @@ module DroidAdbs
         `#{::DroidAdbs.shell} date -s #{yyyymmdd}.#{hhmmss}`.strip
       end
 
+      # @param [String] format A format to `adb shell date`. `+%Y-%m-%dT%T%z` is one format.
+      # @return [String] message from adb command
+      def get_date(format = "")
+        `#{::DroidAdbs.shell} date #{format}`.strip
+      end
+
       # Only for rooted devices.
       #
       # Default SET format is "MMDDhhmm[[CC]YY][.ss]", that's (2 digits each)
